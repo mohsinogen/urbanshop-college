@@ -1,0 +1,13 @@
+.mobileNavbar {
+  display: none !important;
+}
+
+@media only screen and (max-width: 470px) {
+  .mobileNavbar {
+    display: flex !important;
+  }
+  .wrapper {
+    display: flex;
+    justify-content: space-around;
+  }
+}
