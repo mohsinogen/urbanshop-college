@@ -60,7 +60,7 @@ const ProductEditScreen = ({ match, history }) => {
     console.log('file',file);
     if (!file) return;
 
-    const storageRef = ref(storage, `urbanshop/${file.name}`);
+    const storageRef = ref(storage, `urbanshop/${productId + file.name}`);
     const uploadTask = uploadBytesResumable(storageRef, file);
     setUploading(true);
 
