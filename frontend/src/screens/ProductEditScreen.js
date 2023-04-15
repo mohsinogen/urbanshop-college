@@ -8,6 +8,9 @@ import Loader from '../components/Loader'
 import FormContainer from '../components/FormContainer'
 import { listProductDetails, updateProduct } from '../actions/productActions'
 import { PRODUCT_UPDATE_RESET } from '../constants/productConstants'
+import { storage } from '../firbase';
+import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+
 
 const ProductEditScreen = ({ match, history }) => {
   const productId = match.params.id
@@ -52,7 +55,34 @@ const ProductEditScreen = ({ match, history }) => {
     }
   }, [dispatch, history, productId, product, successUpdate])
 
-  const uploadFileHandler = async (e) => {
+  const uploadFileHandler = (e) => {
+    const file = e.target?.files[0]
+    console.log('file',file);
+    if (!file) return;
+
+    const storageRef = ref(storage, `urbanshop/${file.name}`);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+    setUploading(true);
+
+    uploadTask.on("state_changed",
+      (snapshot) => {
+        
+      },
+      (error) => {
+        console.error(error)
+        setUploading(false)
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          console.log('down',downloadURL);
+          setImage(downloadURL)
+          setUploading(false)
+        });
+      }
+    );
+  }
+
+/*   const uploadFileHandler = async (e) => {
     const file = e.target.files[0]
     const formData = new FormData()
     formData.append('image', file)
@@ -73,7 +103,7 @@ const ProductEditScreen = ({ match, history }) => {
       console.error(error)
       setUploading(false)
     }
-  }
+  } */
 
   const submitHandler = (e) => {
     e.preventDefault()
@@ -132,13 +162,13 @@ const ProductEditScreen = ({ match, history }) => {
                 type='text'
                 placeholder='Enter image url'
                 value={image}
-                onChange={(e) => setImage(e.target.value)}
+                readOnly={true}
               ></Form.Control>
               <Form.File
                 id='image-file'
                 label='Choose File'
                 custom
-                onChange={uploadFileHandler}
+                onChange={(e)=>uploadFileHandler(e)}
               ></Form.File>
               {uploading && <Loader />}
             </Form.Group>

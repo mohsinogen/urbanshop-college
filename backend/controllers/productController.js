@@ -78,7 +78,7 @@ const createProduct = asyncHandler(async (req, res) => {
     name: "Sample name",
     price: 0,
     user: req.user._id,
-    image: "/images/sample.jpg",
+    image: "https://firebasestorage.googleapis.com/v0/b/my-bucket-a9016.appspot.com/o/urbanshop%2Fsample.jpg?alt=media&token=426cc36a-fbb6-411c-bd20-637f6a9cd2dc",
 
     brand: "Sample brand",
     category: "Sample category",
