@@ -1,6 +1,6 @@
 import asyncHandler from 'express-async-handler'
 import Order from '../models/orderModel.js'
-
+import { sendEmail } from '../utils/sendEmail.js';
 // @desc    Create new order
 // @route   POST /api/orders
 // @access  Private
@@ -31,7 +31,35 @@ const addOrderItems = asyncHandler(async (req, res) => {
       totalPrice,
     })
 
-    const createdOrder = await order.save()
+    const createdOrder = await order.save();
+
+    const user = req.user; // User who placed the order
+    const orderDetails = orderItems.map(item => {
+      return `
+        <p>Product: ${item.name} - Qty: ${item.qty} - Price: ₹${item.price}</p>
+      `;
+    }).join('');
+
+    const emailHtml = `
+      <h2>Order Confirmation</h2>
+      <p>Hello ${user.name},</p>
+      <p>Your order has been successfully created. Below are the order details:</p>
+      ${orderDetails}
+      <h3>Shipping Address</h3>
+      <p>${shippingAddress.address}, ${shippingAddress.city}, ${shippingAddress.postalCode}, ${shippingAddress.country}</p>
+      <h3>Payment Method</h3>
+      <p>${paymentMethod}</p>
+      <h3>Total Price: ₹${totalPrice}</h3>
+      <p>Thank you for shopping with us!</p>
+    `;
+
+    // Send email to the user
+    try {
+      await sendEmail(user.email, 'Your Order Confirmation', emailHtml);
+      console.log('Order confirmation email sent to:', user.email);
+    } catch (error) {
+      console.error('Error sending email:', error);
+    }
 
     res.status(201).json(createdOrder)
   }
