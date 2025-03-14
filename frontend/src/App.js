@@ -60,7 +60,7 @@ const App = () => {
           <Route path="/" component={HomeScreen} exact />
         </Container>
       </main>
-      <MobileNavbar />
+      {/* <MobileNavbar /> */}
     </Router>
   );
 };
