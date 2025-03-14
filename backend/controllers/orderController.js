@@ -41,16 +41,88 @@ const addOrderItems = asyncHandler(async (req, res) => {
     }).join('');
 
     const emailHtml = `
-      <h2>Order Confirmation</h2>
-      <p>Hello ${user.name},</p>
-      <p>Your order has been successfully created. Below are the order details:</p>
+      <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Confirmation</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #ffffff;
+      color: #000000;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #ffffff;
+    }
+    h2 {
+      color: #000000;
+      text-align: center;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    h3 {
+      color: #000000;
+      font-size: 18px;
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+    p {
+      font-size: 16px;
+      line-height: 1.5;
+      color: #333333;
+    }
+    .order-details, .address, .payment-method, .total-price {
+      background-color: #f4f4f4;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 4px;
+    }
+    .total-price {
+      font-weight: bold;
+      font-size: 18px;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      font-size: 14px;
+      color: #666666;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Order Confirmation</h2>
+    <p>Hello ${user.name},</p>
+    <p>Your order has been successfully created. Below are the order details:</p>
+    
+    <div class="order-details">
       ${orderDetails}
-      <h3>Shipping Address</h3>
-      <p>${shippingAddress.address}, ${shippingAddress.city}, ${shippingAddress.postalCode}, ${shippingAddress.country}</p>
-      <h3>Payment Method</h3>
-      <p>${paymentMethod}</p>
-      <h3>Total Price: ₹${totalPrice}</h3>
-      <p>Thank you for shopping with us!</p>
+    </div>
+
+    <h3>Shipping Address</h3>
+    <p class="address">${shippingAddress.address}, ${shippingAddress.city}, ${shippingAddress.postalCode}, ${shippingAddress.country}</p>
+
+    <h3>Payment Method</h3>
+    <p class="payment-method">${paymentMethod}</p>
+
+    <h3>Total Price: ₹${totalPrice}</h3>
+    <div class="total-price">₹${totalPrice}</div>
+
+    <p>Thank you for shopping with us!</p>
+
+    <div class="footer">
+      <p>Best regards, <br> The Team</p>
+    </div>
+  </div>
+</body>
+</html>
     `;
 
     // Send email to the user

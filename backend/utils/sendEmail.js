@@ -1,12 +1,13 @@
 import nodemailer from 'nodemailer';
+import dotenv from 'dotenv'
+dotenv.config()
 
 // Create a transporter object using the default SMTP transport
 const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST, // You can use other services like SendGrid or AWS SES
-  port: process.env.EMAIL_PORT,
+  service: 'gmail', // or another email service, like 'outlook', 'yahoo', etc.
   auth: {
-    user: process.env.EMAIL_USER, // Your email address (e.g., Gmail address)
-    pass: process.env.EMAIL_PASSWORD, // Your email password or app-specific password
+    user: process.env.EMAIL_USER, // your email address
+    pass: process.env.EMAIL_PASSWORD,  // your email password or App password (for Gmail)
   },
 });
 
